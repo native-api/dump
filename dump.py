@@ -13,7 +13,7 @@ def dump(o, methods=False):
                 continue
             else: v=unicode(e)
         if (not methods) and \
-            isinstance(v,(types.BuiltinFunctionType,types.FunctionType)): continue
+            isinstance(v,(types.BuiltinFunctionType,types.FunctionType,types.MethodType)): continue
         #escape terminal-control characters - they'd break the output
         if isinstance(v,basestring):
             hexpat = u'\\u%04x' if isinstance(v,unicode) else '\\x%02x'
