@@ -1,9 +1,9 @@
 #encoding: utf8
 import sys,os
 
-def dump(o, methods=False):
+def dump(o, methods=False, system=False):
     import exceptions,types
-    for f in (f for f in dir(o) if not(f.startswith('__') and f.endswith('__'))):
+    for f in (f for f in dir(o) if system or (not(f.startswith('__') and f.endswith('__')))):
         try:
             v=getattr(o,f)
         except Exception,e:
