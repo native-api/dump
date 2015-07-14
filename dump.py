@@ -20,6 +20,7 @@ def dump(o, methods=False, system=False):
             v = type(v)('').join(c if ord(c)>=20 else hexpat%ord(c) for c in v)
         try: v=unicode(v)   #for readability
         except UnicodeDecodeError: pass     #If it fails, never mind
+        except AttributeError: v=str(v)     #for some objects that don't have __unicode__
         limit=1024
         print f,':', v[:limit]+'...' if len(v)>limit else v
 
