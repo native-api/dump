@@ -1,14 +1,17 @@
 #encoding: utf8
 import sys,os
+ironpython=hasattr(Exception,'clsException')    #the feature that interests us
 
 def dump(o, methods=False, system=False):
     import exceptions,types
+    if ironpython: import System
+    
     for f in (f for f in dir(o) if system or (not(f.startswith('__') and f.endswith('__')))):
         try:
             v=getattr(o,f)
         except Exception,e:
-            if (type(e)==exceptions.SystemError \
-                    and e[0]=='Указанный метод не поддерживается.')\
+            if (ironpython and type(e)==exceptions.SystemError \
+                        and isinstance(e.clsException,System.NotSupportedException)\
                     or type(e)==exceptions.AttributeError:
                 continue
             else: v=unicode(e)
