@@ -22,7 +22,7 @@ def dump(o, methods=False, system=False):
             v=getattr(o,f)
         except Exception,e:
             if (ironpython and type(e)==exceptions.SystemError \
-                        and isinstance(e.clsException,System.NotSupportedException)\
+                        and isinstance(e.clsException,System.NotSupportedException))\
                     or type(e)==exceptions.AttributeError:
                 continue
             else: v=unicode(e)
