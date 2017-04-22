@@ -1,12 +1,22 @@
 #encoding: utf8
+from __future__ import print_function
 import sys,os
 ironpython=hasattr(Exception,'clsException')    #the feature that interests us
 
-def dump(o, methods=False, system=False):
+import types
+if ironpython: import System
+import six
+unicode=six.text_type
+str=six.binary_type
+basestring=six.string_types
+
+limit=1024  #truncate values after this many characters
+
+def dump(o, system=False, methods=False):
     """Dump object's contents.
 
-    :param methods: include functions
     :param system: include members with names starting and ending with double-underscore
+    :param methods: include functions
 
     Always skips members that yield AttrbiuteError or (in IronPython) NotSupportedException.
     For other exceptions, prints the exception alongside the member.
@@ -14,16 +24,14 @@ def dump(o, methods=False, system=False):
     Prints national characters unless this would yield a transcoding error.
     Non-printable characters are replaced with escape-sequences.
     """
-    import exceptions,types
-    if ironpython: import System
     
     for f in (f for f in dir(o) if system or (not(f.startswith('__') and f.endswith('__')))):
         try:
             v=getattr(o,f)
-        except Exception,e:
-            if (ironpython and type(e)==exceptions.SystemError \
+        except Exception as e:
+            if (ironpython and type(e)==SystemError \
                         and isinstance(e.clsException,System.NotSupportedException))\
-                    or type(e)==exceptions.AttributeError:
+                    or type(e)==AttributeError:
                 continue
             else: v=unicode(e)
         if (not methods) and \
@@ -35,16 +43,16 @@ def dump(o, methods=False, system=False):
         try: v=unicode(v)   #for readability
         except UnicodeDecodeError: pass     #If it fails, never mind
         except AttributeError: v=str(v)     #for some objects that don't have __unicode__
-        limit=1024
-        print f,':', v[:limit]+'...' if len(v)>limit else v
+        print(f,':', v[:limit]+'...' if len(v)>limit else v)
 
-def enum(e):
-    """Dump .NET enum members and their values."""
-    import System
-    t = System.Reflection.TypeDelegator(e)
-    for n in t.GetEnumNames():
-        print n,'=',t.GetMember(n)[0].GetRawConstantValue()
-        
-def cls():
-    """clear console window and its buffer"""
-    os.system("cls")
+if ironpython:
+    def enum(e):
+        """Dump .NET enum members and their values."""
+        import System
+        t = System.Reflection.TypeDelegator(e)
+        for n in t.GetEnumNames():
+            print(n,'=',t.GetMember(n)[0].GetRawConstantValue())
+            
+    def cls():
+        """clear console window and its buffer"""
+        os.system("cls")
