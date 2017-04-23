@@ -48,7 +48,6 @@ def dump(o, system=False, methods=False):
 if ironpython:
     def enum(e):
         """Dump .NET enum members and their values."""
-        import System
         t = System.Reflection.TypeDelegator(e)
         for n in t.GetEnumNames():
             print(n,'=',t.GetMember(n)[0].GetRawConstantValue())
