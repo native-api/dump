@@ -7,3 +7,7 @@ Prints all object attributes and their values. Excludes arguments that should be
 `enum()` dump members of a .NET enum and their values
 
 `cls()` clear the screen and `cmd` console buffer
+
+# Installation
+
+`pip install git+https://github.com/native-api/dump`
